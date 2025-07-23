@@ -1,0 +1,24 @@
+From 1a99d0de11dde9ed999207f6b18ccae15fa107c7 Mon Sep 17 00:00:00 2001
+From: yaakov entin <yaakov.entin@compulab.co.il>
+Date: Wed, 23 Jul 2025 15:07:29 +0300
+Subject: [PATCH] support for edge ai
+
+---
+ arch/arm64/configs/defconfig | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 4a262fbda828..727a6f1b55fb 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -1346,3 +1346,7 @@ CONFIG_FUNCTION_TRACER=y
+ # CONFIG_FUNCTION_GRAPH_TRACER is not set
+ # CONFIG_DYNAMIC_FTRACE is not set
+ CONFIG_MEMTEST=y
++CONFIG_IGC=m
++CONFIG_USB_SERIAL_QUALCOMM=m
++CONFIG_USB_NET_CDC_MBIM=m
++CONFIG_USB_WDM=m
+-- 
+2.43.0
+
