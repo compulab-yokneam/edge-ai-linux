@@ -1,0 +1,151 @@
+From ec7d4280d73499f8ab4e8bcd7cdf79cb20c8c775 Mon Sep 17 00:00:00 2001
+From: yaakov entin <yaakov.entin@compulab.co.il>
+Date: Wed, 23 Jul 2025 14:42:40 +0300
+Subject: [PATCH] support-for-edge-ai
+
+---
+ ...ra234-p3768-0000+p3767-xxxx-nv-common.dtsi | 56 ++++++++++---------
+ nv-soc/tegra234-soc-overlay.dtsi              |  2 +-
+ tegra234-p3768-0000.dtsi                      |  7 ++-
+ tegra234.dtsi                                 |  6 +-
+ 4 files changed, 40 insertions(+), 31 deletions(-)
+
+diff --git a/nv-platform/tegra234-p3768-0000+p3767-xxxx-nv-common.dtsi b/nv-platform/tegra234-p3768-0000+p3767-xxxx-nv-common.dtsi
+index 3f68f82..a03a851 100644
+--- a/nv-platform/tegra234-p3768-0000+p3767-xxxx-nv-common.dtsi
++++ b/nv-platform/tegra234-p3768-0000+p3767-xxxx-nv-common.dtsi
+@@ -127,31 +127,35 @@
+ 			status = "okay";
+ 		};
+ 
+-		/* SPI1, 40pin header, Pin 19(MOSI), Pin 21(MISO), Pin 23(CLK), Pin 24(CS) */
+-		spi@3210000{
+-			status = "okay";
+-			spi@0 {
+-				compatible = "tegra-spidev";
+-				reg = <0x0>;
+-				spi-max-frequency = <50000000>;
+-				controller-data {
+-					nvidia,enable-hw-based-cs;
+-					nvidia,rx-clk-tap-delay = <0x10>;
+-					nvidia,tx-clk-tap-delay = <0x0>;
+-				};
+-			};
+-			spi@1 {
+-				compatible = "tegra-spidev";
+-				reg = <0x1>;
+-				spi-max-frequency = <50000000>;
+-				controller-data {
+-					nvidia,enable-hw-based-cs;
+-					nvidia,rx-clk-tap-delay = <0x10>;
+-					nvidia,tx-clk-tap-delay = <0x0>;
+-				};
+-			};
+-
+-		};
++        /* SPI1, 40pin header, Pin 19(MOSI), Pin 21(MISO), Pin 23(CLK), Pin 24(CS) */
++        spi@3210000{
++            status = "okay";
++            cs-gpios = <&gpio TEGRA234_MAIN_GPIO(Z, 6) GPIO_ACTIVE_LOW>;  /* SPI1_CS0 */
++            slb9670: spi@0 {
++                 compatible = "infineon,slb9670";
++                 reg = <0x0>;
++                 spi-max-frequency = <5000000>;
++                 status = "okay";
++                 reset-gpios = <&gpio
++                     TEGRA234_AON_GPIO(CC, 0)
++                     GPIO_ACTIVE_LOW>;
++                 controller-data {
++                     nvidia,enable-hw-based-cs;
++                     nvidia,rx-clk-tap-delay = <0x10>;
++                     nvidia,tx-clk-tap-delay = <0x0>;
++                 };
++             };
++             spi@1 {
++                 compatible = "tegra-spidev";
++                 reg = <0x1>;
++                 spi-max-frequency = <50000000>;
++                 controller-data {
++                     nvidia,enable-hw-based-cs;
++                     nvidia,rx-clk-tap-delay = <0x10>;
++                     nvidia,tx-clk-tap-delay = <0x0>;
++                 };
++             };
++        };
+ 
+ 		/* SPI3, 40pin header, Pin 37(MOSI), Pin 22(MISO), Pin 13(CLK), Pin 18(CS) */
+ 		spi@3230000{
+@@ -421,7 +425,7 @@
+ 
+ 	display@13800000 {
+ 		/* os_gpio_hotplug_a is used for hotplug */
+-		os_gpio_hotplug_a = <&gpio TEGRA234_MAIN_GPIO(M, 0) GPIO_ACTIVE_HIGH>;
++		os_gpio_hotplug_a = <&gpio TEGRA234_MAIN_GPIO(M, 0) GPIO_ACTIVE_LOW>;
+ 		status = "okay";
+ 	};
+ 
+diff --git a/nv-soc/tegra234-soc-overlay.dtsi b/nv-soc/tegra234-soc-overlay.dtsi
+index a40d9b6..41a6379 100644
+--- a/nv-soc/tegra234-soc-overlay.dtsi
++++ b/nv-soc/tegra234-soc-overlay.dtsi
+@@ -291,7 +291,7 @@
+ 			interrupts = <GIC_SPI TEGRA234_IRQ_UARTB IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&bpmp TEGRA234_CLK_UARTB>;
+ 			resets = <&bpmp TEGRA234_RESET_UARTB>;
+-			status = "disabled";
++			status = "okay";
+ 		};
+ 
+ 		tachometer@39c0000 {
+diff --git a/tegra234-p3768-0000.dtsi b/tegra234-p3768-0000.dtsi
+index 5d0298b..15a1491 100644
+--- a/tegra234-p3768-0000.dtsi
++++ b/tegra234-p3768-0000.dtsi
+@@ -108,7 +108,12 @@
+ 
+ 				/* J5 */
+ 				usb3-1 {
+-					nvidia,usb2-companion = <0>;
++					nvidia,usb2-companion = <1>;
++					status = "okay";
++				};
++
++				usb3-2 {
++					nvidia,usb2-companion = <2>;
+ 					status = "okay";
+ 				};
+ 			};
+diff --git a/tegra234.dtsi b/tegra234.dtsi
+index 91474c5..4195973 100644
+--- a/tegra234.dtsi
++++ b/tegra234.dtsi
+@@ -3174,7 +3174,7 @@
+ 
+ 						usb3-2 {
+ 							nvidia,function = "xusb";
+-							status = "disabled";
++							status = "okay";
+ 							#phy-cells = <0>;
+ 						};
+ 
+@@ -4544,7 +4544,7 @@
+ 			iommu-map-mask = <0x0>;
+ 			dma-coherent;
+ 
+-			status = "disabled";
++			status = "okay";
+ 		};
+ 
+ 		pcie@140e0000 {
+@@ -4598,7 +4598,7 @@
+ 			iommu-map-mask = <0x0>;
+ 			dma-coherent;
+ 
+-			status = "disabled";
++			status = "okay";
+ 		};
+ 
+ 		pcie-ep@140e0000 {
+-- 
+2.43.0
+
