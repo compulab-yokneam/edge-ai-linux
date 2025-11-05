@@ -1,0 +1,59 @@
+From 639cadc9b6a9c318ca7c5724576d6c9a20689f71 Mon Sep 17 00:00:00 2001
+From: Val Rasky <valentin@compulab.co.il>
+Date: Mon, 3 Nov 2025 14:19:00 +0200
+Subject: [PATCH] Remove the typec port controller
+
+Signed-off-by: Val Rasky <valentin@compulab.co.il>
+---
+ ...ra234-p3768-0000+p3767-xxxx-nv-common.dtsi | 28 -------------------
+ 1 file changed, 28 deletions(-)
+
+diff --git a/nv-platform/tegra234-p3768-0000+p3767-xxxx-nv-common.dtsi b/nv-platform/tegra234-p3768-0000+p3767-xxxx-nv-common.dtsi
+index a03a851..74228fd 100644
+--- a/nv-platform/tegra234-p3768-0000+p3767-xxxx-nv-common.dtsi
++++ b/nv-platform/tegra234-p3768-0000+p3767-xxxx-nv-common.dtsi
+@@ -182,18 +182,6 @@
+ 			};
+ 		};
+ 
+-		padctl@3520000 {
+-			ports {
+-				usb2-0 {
+-					port {
+-						typec_p0: endpoint {
+-							remote-endpoint = <&fusb_p0>;
+-						};
+-					};
+-				};
+-			};
+-		};
+-
+ 		i2c@c240000 {
+ 			status = "okay";
+ 			ina32211_1_40: ina3221@40 {
+@@ -217,22 +205,6 @@
+ 					shunt-resistor-micro-ohms = <5000>;
+ 				};
+ 			};
+-			fusb301@25 {
+-				compatible = "onsemi,fusb301";
+-				reg = <0x25>;
+-				status = "okay";
+-				#address-cells = <1>;
+-				#size-cells = <0>;
+-				interrupt-parent = <&gpio>;
+-				interrupts = <TEGRA234_MAIN_GPIO(Z, 1) IRQ_TYPE_LEVEL_LOW>;
+-				connector@0 {
+-					port@0 {
+-						fusb_p0: endpoint {
+-							remote-endpoint = <&typec_p0>;
+-						};
+-					};
+-				};
+-			};
+ 		};
+ 
+ 		pcie-ep@14160000 {/* C4 - End Point */
+-- 
+2.34.1
+
