@@ -3,7 +3,7 @@ On a linux host run:
 ```
 mkdir edge-ai
 cd edge-ai
-bash <(curl -fsSL https://raw.githubusercontent.com/compulab-yokneam/edge-ai-linux/master/scripts/runme.sh)
+bash <(curl -fsSL https://raw.githubusercontent.com/compulab-yokneam/edge-ai-linux/devel/scripts/runme.sh)
 ```
 # Flashing target
 * Connect host to target's recovery USB port
