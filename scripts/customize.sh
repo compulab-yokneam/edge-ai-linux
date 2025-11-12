@@ -2,8 +2,9 @@
 set -euo pipefail
 
 PATCH_DIR="${COMPULAB_DIR}/patches"
+FILES_DIR="${COMPULAB_DIR}/files"
 
-cp -v "${COMPULAB_DIR}/edge-ai.conf" "${L4T_DIR}/"
+cp -v "${FILES_DIR}/conf/*" "${L4T_DIR}/"
 
 # kernel
 cd "${L4T_SRC_DIR}/kernel/kernel-jammy-src"
@@ -12,9 +13,10 @@ make defconfig
 
 # bootloader
 cd "${L4T_DIR}/bootloader"
-patch -p1 < "${PATCH_DIR}/bl/0001-support-for-Orin-edge-ai.patch"
-gzip --decompress --keep ${COMPULAB_DIR}/uefi_jetson.bin.gz
-cp -v ${COMPULAB_DIR}/uefi_jetson.bin "${L4T_DIR}/bootloader/"
+patch -p1 < "${PATCH_DIR}/bl/"*
+
+# Deploy precompiled files
+tar -C "${L4T_DIR}/bootloader" -xvf "${FILES_DIR}/bl/bootloader.tar.bz2"
 
 # device tree
 cd "${L4T_SRC_DIR}/hardware/nvidia/t23x/nv-public"
