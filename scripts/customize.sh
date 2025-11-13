@@ -9,7 +9,7 @@ L4T_COMPULAB="https://github.com/compulab-yokneam/compulab-l4t/archive/refs/head
 
 # root node
 l4t() {
-    curl -fsSL ${L4T_COMPULAB} | tar -C ${L4T_DIR} --strip-components=1 -xz
+    curl -fsSL ${L4T_COMPULAB} | tar -C ${L4T_DIR} --strip-components=1 -xvz
 }
 
 # kernel
