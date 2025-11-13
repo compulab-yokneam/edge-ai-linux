@@ -4,7 +4,7 @@ set -euo pipefail
 PATCH_DIR="${COMPULAB_DIR}/patches"
 FILES_DIR="${COMPULAB_DIR}/files"
 
-cp -v "${FILES_DIR}/conf/*" "${L4T_DIR}/"
+cp -v ${FILES_DIR}/conf/* ${L4T_DIR}/
 
 # kernel
 cd "${L4T_SRC_DIR}/kernel/kernel-jammy-src"
