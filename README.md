@@ -1,5 +1,19 @@
+# Prerequisites
+A Ubuntu 22.04 host machine.
+
+You have installed Git. You can install it with the following command:
+```
+sudo apt update
+sudo apt install git
+```
+
+You have installed the Linux kernel build utilities. You can install them with the following command:
+```
+sudo apt install curl wget build-essential bc flex bison libssl-dev zstd
+```
+
 # Building
-On a linux host run:
+On the host run:
 ```
 mkdir edge-ai
 cd edge-ai
