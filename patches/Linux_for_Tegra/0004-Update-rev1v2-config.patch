@@ -1,0 +1,54 @@
+From 8595d9860547dce5585e5f6640f80ba44bc99c34 Mon Sep 17 00:00:00 2001
+From: Val Rasky <valentin@compulab.co.il>
+Date: Thu, 13 Nov 2025 16:11:08 +0200
+Subject: [PATCH] Update rev1v2 config
+
+Signed-off-by: Val Rasky <valentin@compulab.co.il>
+---
+ edge-ai-rev1v2.conf | 11 +----------
+ 1 file changed, 1 insertion(+), 10 deletions(-)
+
+diff --git a/edge-ai-rev1v2.conf b/edge-ai-rev1v2.conf
+index 34e149e..3dc092d 100644
+--- a/edge-ai-rev1v2.conf
++++ b/edge-ai-rev1v2.conf
+@@ -27,13 +27,6 @@
+ # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ 
+ source "${LDK_DIR}/p3768-0000-p3767-0000-super.conf"
+-#source "${LDK_DIR}/p3767.conf.common";
+-
+-#PINMUX_CONFIG="tegra234-mb1-bct-pinmux-p3767-hdmi-a03.dtsi";
+-#PMC_CONFIG="tegra234-mb1-bct-padvoltage-p3767-hdmi-a03.dtsi";
+-
+-#PINMUX_CONFIG="sb-orn-hdmi-pinmux.dtsi";
+-#PMC_CONFIG="sb-orn-hdmi-padvoltage-default.dtsi";
+ 
+ p3767_super_overlay()
+ {
+@@ -86,14 +79,11 @@ p3767_super_maxn_overlay()
+ 
+ update_flash_args()
+ {
+-	set -x
+ 	update_flash_args_common
+ 	p3767_super_overlay
+ 	p3767_super_maxn_overlay
+ }
+ 
+-# EMMC_CFG="flash_t234_qspi_nvme.xml";
+-
+ if [ "${UPHYLANE}" = "c7x1" ]; then
+ 	UPHYLANE_CONFIG="tegra234-mb1-bct-uphylane-si-c7x1.dtsi";
+ 	EMMC_CFG="flash_t234_qspi_nvme_c7.xml";
+@@ -102,6 +92,7 @@ elif [ "${UPHYLANE}" = "c7x2" ]; then
+ 	EMMC_CFG="flash_t234_qspi_nvme_c7.xml";
+ fi
+ 
++MB2_BCT="Orin-edge-ai-mb2-bct-misc-p3767-0000.dts";
+ PINMUX_CONFIG="Orin-edge-ai-rev1v2-pinmux.dtsi";
+ PMC_CONFIG="Orin-edge-ai-rev1v2-padvoltage-default.dtsi";
+ 
+-- 
+2.34.1
+
