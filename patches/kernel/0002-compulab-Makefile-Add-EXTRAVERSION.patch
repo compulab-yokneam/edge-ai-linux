@@ -1,7 +1,7 @@
-From d583b7976809c39227d9660290ecd8e5de980528 Mon Sep 17 00:00:00 2001
+From a7d6c09001a94c27e5106c87af9c55e44b80590a Mon Sep 17 00:00:00 2001
 From: Valentin Raevsky <valentin@compulab.co.il>
 Date: Sun, 16 Nov 2025 13:21:14 +0200
-Subject: [PATCH] Add EXTRAVERSION
+Subject: [PATCH] compulab: Makefile: Add EXTRAVERSION
 
 Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
 ---
