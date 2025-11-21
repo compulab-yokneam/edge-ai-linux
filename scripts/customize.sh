@@ -12,7 +12,6 @@ git_fini() {
 }
 
 git_init() {
-	set -x
 	git config --global user.name && rc=$? || rc=$?
 	if [ ${rc} -ne 0 ];then
 		git config --global user.email devname@example.com
@@ -31,9 +30,14 @@ l4t() {
 
 # kernel
 kernel() {
-    git -C ${L4T_SRC_DIR}/kernel/kernel-jammy-src checkout -b ${BRANCH_NAME} ${SRC_TAG}
-    git -C ${L4T_SRC_DIR}/kernel/kernel-jammy-src am  "${PATCH_DIR}/kernel/"*
-    make -C ${L4T_SRC_DIR}/kernel/kernel-jammy-src defconfig
+    local kernel_src=${L4T_SRC_DIR}/kernel/kernel-jammy-src
+    git -C ${kernel_src} checkout -b ${BRANCH_NAME} ${SRC_TAG}
+    git -C ${kernel_src} am "${PATCH_DIR}/kernel/"*
+    make -C ${kernel_src} defconfig compulab.config
+    make -C ${kernel_src} savedefconfig
+    cp -v ${kernel_src}/defconfig ${kernel_src}/arch/arm64/configs/
+    git -C ${kernel_src} commit -s -m"Update defconfig" arch/arm64/configs/defconfig
+
 }
 
 # device tree
