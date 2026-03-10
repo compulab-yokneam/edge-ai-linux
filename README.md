@@ -1,4 +1,4 @@
-# Building
+# To build Compulab Jetpack 6.2.1
 On a linux host run:
 ```
 mkdir edge-ai
