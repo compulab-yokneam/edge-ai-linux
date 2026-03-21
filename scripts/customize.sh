@@ -3,7 +3,6 @@ set -euo pipefail
 
 PATCH_DIR="${COMPULAB_DIR}/patches"
 BRANCH_NAME="compulab_$(date +%Y-%m-%d_%H-%M-%S)"
-SRC_TAG="jetson_${VERSION_MAJOR}.${VERSION_MINOR}"
 # CompuLab Resources
 L4T_COMPULAB="https://github.com/compulab-yokneam/compulab-l4t/archive/refs/heads/Linux_for_Tegra.tar.gz"
 

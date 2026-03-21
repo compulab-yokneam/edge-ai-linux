@@ -1,5 +1,6 @@
 export VERSION_MAJOR=36
 export VERSION_MINOR=5.0
+export SRC_TAG="jetson_36.5"
 RELEASE="r${VERSION_MAJOR}.${VERSION_MINOR}"
 RELEASE_URL="https://developer.nvidia.com/downloads/embedded/l4t/r${VERSION_MAJOR}_release_v${VERSION_MINOR}/release"
 TOOLS_URL="https://developer.nvidia.com/downloads/embedded/l4t/r36_release_v3.0/toolchain"
