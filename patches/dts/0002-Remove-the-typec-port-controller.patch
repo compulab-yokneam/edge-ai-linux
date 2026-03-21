@@ -1,18 +1,18 @@
-From 639cadc9b6a9c318ca7c5724576d6c9a20689f71 Mon Sep 17 00:00:00 2001
-From: Val Rasky <valentin@compulab.co.il>
-Date: Mon, 3 Nov 2025 14:19:00 +0200
+From d700182849092e948366acb0b48dd10c61d9423b Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Sat, 21 Mar 2026 16:41:16 +0200
 Subject: [PATCH] Remove the typec port controller
 
-Signed-off-by: Val Rasky <valentin@compulab.co.il>
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
 ---
  ...ra234-p3768-0000+p3767-xxxx-nv-common.dtsi | 28 -------------------
  1 file changed, 28 deletions(-)
 
 diff --git a/nv-platform/tegra234-p3768-0000+p3767-xxxx-nv-common.dtsi b/nv-platform/tegra234-p3768-0000+p3767-xxxx-nv-common.dtsi
-index a03a851..74228fd 100644
+index 54338a0..a8cb94c 100644
 --- a/nv-platform/tegra234-p3768-0000+p3767-xxxx-nv-common.dtsi
 +++ b/nv-platform/tegra234-p3768-0000+p3767-xxxx-nv-common.dtsi
-@@ -182,18 +182,6 @@
+@@ -166,36 +166,8 @@
  			};
  		};
  
@@ -30,11 +30,6 @@ index a03a851..74228fd 100644
 -
  		i2c@c240000 {
  			status = "okay";
- 			ina32211_1_40: ina3221@40 {
-@@ -217,22 +205,6 @@
- 					shunt-resistor-micro-ohms = <5000>;
- 				};
- 			};
 -			fusb301@25 {
 -				compatible = "onsemi,fusb301";
 -				reg = <0x25>;
@@ -53,7 +48,7 @@ index a03a851..74228fd 100644
 -			};
  		};
  
- 		pcie-ep@14160000 {/* C4 - End Point */
+ 		/* PWM1, 40pin header, pin 15 */
 -- 
 2.34.1
 
