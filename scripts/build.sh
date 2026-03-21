@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-source $(dirname ${BASH_SOURCE[0]})/set_env.sh
+source $(dirname ${BASH_SOURCE[0]})/env.inc
 
 download() {
     mkdir -p ${DL_DIR}
