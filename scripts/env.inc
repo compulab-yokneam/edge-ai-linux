@@ -5,8 +5,8 @@ RELEASE="r${VERSION_MAJOR}.${VERSION_MINOR}"
 RELEASE_URL="https://developer.nvidia.com/downloads/embedded/l4t/r${VERSION_MAJOR}_release_v${VERSION_MINOR}/release"
 TOOLS_URL="https://developer.nvidia.com/downloads/embedded/l4t/r36_release_v3.0/toolchain"
 
-export COMPULAB_DIR=$(dirname $(dirname ${BASH_SOURCE[0]}))
-WORKDIR="${COMPULAB_DIR}/.."
+export COMPULAB_DIR=$(dirname $(dirname $(readlink -e ${BASH_SOURCE[0]})))
+WORKDIR=$(readlink -e ${COMPULAB_DIR}/..)
 DL_DIR="${WORKDIR}/downloads"
 export L4T_DIR="${WORKDIR}/Linux_for_Tegra"
 export L4T_SRC_DIR="${L4T_DIR}/source"

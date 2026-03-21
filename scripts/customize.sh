@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-PATCH_DIR="${COMPULAB_DIR}/patches"
+PATCH_DIR=$(readlink -e ${COMPULAB_DIR}/patches)
 BRANCH_NAME="compulab_$(date +%Y-%m-%d_%H-%M-%S)"
 # CompuLab Resources
 L4T_COMPULAB="https://github.com/compulab-yokneam/compulab-l4t/archive/refs/heads/Linux_for_Tegra.tar.gz"
@@ -29,7 +29,7 @@ l4t() {
 
 # kernel
 kernel() {
-    local kernel_src=${L4T_SRC_DIR}/kernel/kernel-jammy-src
+    local kernel_src=$(readlink -e ${L4T_SRC_DIR}/kernel/kernel-jammy-src)
     git -C ${kernel_src} checkout -b ${BRANCH_NAME} ${SRC_TAG}
     git -C ${kernel_src} am "${PATCH_DIR}/kernel/"*
     make -C ${kernel_src} defconfig compulab.config
