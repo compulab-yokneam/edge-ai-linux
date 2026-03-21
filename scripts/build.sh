@@ -16,7 +16,7 @@ unpack_bsp() {
 }
 
 init() {
-    cd ${L4T_SRC_DIR} && ./source_sync.sh -t jetson_${VERSION_MAJOR}.${VERSION_MINOR}
+    cd ${L4T_SRC_DIR} && ./source_sync.sh -t ${SRC_TAG}
     cd ${L4T_DIR}
     sudo ./tools/l4t_flash_prerequisites.sh
     sudo ./apply_binaries.sh
