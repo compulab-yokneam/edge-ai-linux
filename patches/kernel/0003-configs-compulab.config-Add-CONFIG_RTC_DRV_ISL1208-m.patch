@@ -1,0 +1,22 @@
+From 0f3653b83807955ac70a97c218020ef4f0e59147 Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Thu, 23 Apr 2026 16:02:57 +0300
+Subject: [PATCH] configs: compulab.config: Add CONFIG_RTC_DRV_ISL1208=m
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ arch/arm64/configs/compulab.config | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm64/configs/compulab.config b/arch/arm64/configs/compulab.config
+index 4d01325923d8..b03dbec7e7c8 100644
+--- a/arch/arm64/configs/compulab.config
++++ b/arch/arm64/configs/compulab.config
+@@ -8,3 +8,4 @@ CONFIG_USB_NET_CDC_MBIM=m
+ CONFIG_USB_NET_QMI_WWAN=m
+ CONFIG_USB_SERIAL_QUALCOMM=m
+ CONFIG_USB_WDM=m
++CONFIG_RTC_DRV_ISL1208=m
+-- 
+2.34.1
+
