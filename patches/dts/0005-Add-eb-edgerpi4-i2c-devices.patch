@@ -1,0 +1,47 @@
+From 10763ddeab43d7f1ae433c0201e65c01c24309d7 Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Thu, 23 Apr 2026 15:46:48 +0300
+Subject: [PATCH] Add eb-edgerpi4 i2c devices
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ nv-platform/compulab/eb-edgerpi4.dtsi            | 16 ++++++++++++++++
+ ...tegra234-p3768-0000+p3767-xxxx-nv-common.dtsi |  2 ++
+ 2 files changed, 18 insertions(+)
+ create mode 100644 nv-platform/compulab/eb-edgerpi4.dtsi
+
+diff --git a/nv-platform/compulab/eb-edgerpi4.dtsi b/nv-platform/compulab/eb-edgerpi4.dtsi
+new file mode 100644
+index 0000000..fb120aa
+--- /dev/null
++++ b/nv-platform/compulab/eb-edgerpi4.dtsi
+@@ -0,0 +1,16 @@
++&hdr40_i2c1 {
++    status = "okay";
++    pca9555:pca9555@20 {
++        compatible = "nxp,pca9555";
++        gpio-controller;
++        #gpio-cells = <2>;
++        reg = <0x20>;
++        status = "okay";
++    };
++
++    rtc0: rtc@6f {
++        compatible = "isil,isl1219";
++        reg = <0x6f>;
++        status = "okay";
++    };
++};
+diff --git a/nv-platform/tegra234-p3768-0000+p3767-xxxx-nv-common.dtsi b/nv-platform/tegra234-p3768-0000+p3767-xxxx-nv-common.dtsi
+index 74228fd..822e641 100644
+--- a/nv-platform/tegra234-p3768-0000+p3767-xxxx-nv-common.dtsi
++++ b/nv-platform/tegra234-p3768-0000+p3767-xxxx-nv-common.dtsi
+@@ -407,3 +407,5 @@
+ };
+ 
+ /delete-node/ &{/gpio-keys/key-suspend};
++
++#include "compulab/eb-edgerpi4.dtsi"
+-- 
+2.34.1
+
