@@ -1,0 +1,38 @@
+From c913490dd20cfa5e99fae8e894322b6fccf0d14d Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Sun, 17 May 2026 17:08:02 +0300
+Subject: [PATCH] compuab: adv7180: Update default values in adv7180_probe()
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ drivers/media/i2c/adv7180.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/media/i2c/adv7180.c b/drivers/media/i2c/adv7180.c
+index d9a99fcfacb1..36db0cb96f48 100644
+--- a/drivers/media/i2c/adv7180.c
++++ b/drivers/media/i2c/adv7180.c
+@@ -1361,7 +1361,9 @@ static int adv7180_probe(struct i2c_client *client,
+ 		return -ENOMEM;
+ 
+ 	state->client = client;
+-	state->field = V4L2_FIELD_ALTERNATE;
++	/* Added default to NONE */
++	state->field = V4L2_FIELD_NONE;
++
+ 	state->chip_info = (struct adv7180_chip_info *)id->driver_data;
+ 
+ 	state->pwdn_gpio = devm_gpiod_get_optional(&client->dev, "powerdown",
+@@ -1401,7 +1403,8 @@ static int adv7180_probe(struct i2c_client *client,
+ 
+ 	state->irq = client->irq;
+ 	mutex_init(&state->mutex);
+-	state->curr_norm = V4L2_STD_NTSC;
++	/* Added default to PAL */
++	state->curr_norm = V4L2_STD_PAL;
+ 	if (state->chip_info->flags & ADV7180_FLAG_RESET_POWERED)
+ 		state->powered = true;
+ 	else
+-- 
+2.34.1
+

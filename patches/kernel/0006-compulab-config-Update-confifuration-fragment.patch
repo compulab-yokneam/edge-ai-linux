@@ -1,0 +1,27 @@
+From 4a54a09c53f79598543b48853b1b95c16eea31aa Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Sun, 17 May 2026 17:09:08 +0300
+Subject: [PATCH] compulab: config: Update confifuration fragment
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ arch/arm64/configs/compulab.config | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/arch/arm64/configs/compulab.config b/arch/arm64/configs/compulab.config
+index b03dbec7e7c8..47f6ea83cc76 100644
+--- a/arch/arm64/configs/compulab.config
++++ b/arch/arm64/configs/compulab.config
+@@ -9,3 +9,9 @@ CONFIG_USB_NET_QMI_WWAN=m
+ CONFIG_USB_SERIAL_QUALCOMM=m
+ CONFIG_USB_WDM=m
+ CONFIG_RTC_DRV_ISL1208=m
++CONFIG_VIDEO_ADV7180=m
++CONFIG_VIDEO_RK628=m
++CONFIG_VIDEO_RK628=m
++CONFIG_MEDIA_SUBDRV_AUTOSELECT=n
++CONFIG_VIDEO_ADV7180=m
++CONFIG_CXD2880_SPI_DRV=n
+-- 
+2.34.1
+
