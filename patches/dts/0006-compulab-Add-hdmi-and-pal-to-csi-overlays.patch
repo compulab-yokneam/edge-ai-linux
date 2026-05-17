@@ -1,0 +1,326 @@
+From 196c03cd729ad184574abc2b487f606c6ec8195f Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Sun, 17 May 2026 16:53:37 +0300
+Subject: [PATCH] compulab: Add hdmi and pal to csi overlays
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ overlay/Makefile                         |   2 +
+ overlay/tegra234-camera-HDMI-rk628.dts   | 119 ++++++++++++++++
+ overlay/tegra234-camera-PAL-adv280-m.dts | 165 +++++++++++++++++++++++
+ 3 files changed, 286 insertions(+)
+ create mode 100644 overlay/tegra234-camera-HDMI-rk628.dts
+ create mode 100644 overlay/tegra234-camera-PAL-adv280-m.dts
+
+diff --git a/overlay/Makefile b/overlay/Makefile
+index 93728f4..e3ab705 100644
+--- a/overlay/Makefile
++++ b/overlay/Makefile
+@@ -65,6 +65,8 @@ dtbo-y += tegra234-p3767-camera-p3768-imx219-A.dtbo
+ dtbo-y += tegra234-p3767-camera-p3768-imx219-imx477.dtbo
+ dtbo-y += tegra234-p3767-camera-p3768-imx477-C.dtbo
+ dtbo-y += tegra234-p3767-camera-p3768-imx477-A.dtbo
++dtbo-y += tegra234-camera-PAL-adv280-m.dtbo
++dtbo-y += tegra234-camera-HDMI-rk628.dtbo
+ 
+ ifneq ($(dtb-y),)
+ dtb-y := $(addprefix $(makefile-path)/,$(dtb-y))
+diff --git a/overlay/tegra234-camera-HDMI-rk628.dts b/overlay/tegra234-camera-HDMI-rk628.dts
+new file mode 100644
+index 0000000..24a83b1
+--- /dev/null
++++ b/overlay/tegra234-camera-HDMI-rk628.dts
+@@ -0,0 +1,119 @@
++/dts-v1/;
++/plugin/;
++
++#include <dt-bindings/tegra234-p3767-0000-common.h>
++
++#define HDMI_RESET  TEGRA234_MAIN_GPIO(AC, 6)
++
++/ {
++    overlay-name = "RK628-HDMI-CSI-4Lane-Port2";
++    compatible = JETSON_COMPATIBLE_P3768;
++
++    fragment@0 {
++        target-path = "/";
++        __overlay__ {
++            tegra-capture-vi {
++                status = "okay";
++                num-channels = <1>;
++                ports {
++                    #address-cells = <1>;
++                    #size-cells = <0>;
++                    port@0 {
++                        reg = <0>;
++                        rk628_vi_in0: endpoint {
++                            port-index = <2>;
++                            bus-width = <4>;
++                            remote-endpoint = <&rk628_nvcsi_out>;
++                        };
++                    };
++                };
++            };
++
++            bus@0 {
++                host1x@13e00000 {
++                    nvcsi@15a00000 {
++                        status = "okay";
++                        channel@0 {
++                            reg = <0>;
++                            status = "okay";
++                            ports {
++                                #address-cells = <1>;
++                                #size-cells = <0>;
++                                port@0 {
++                                    reg = <0>;
++                                    rk628_nvcsi_in: endpoint {
++                                        port-index = <2>;
++                                        bus-width = <4>;
++                                        /* This must match the endpoint label in rk628_csi */
++                                        remote-endpoint = <&hdmiin_out1>;
++                                    };
++                                };
++                                port@1 {
++                                    reg = <1>;
++                                    rk628_nvcsi_out: endpoint {
++                                        remote-endpoint = <&rk628_vi_in0>;
++                                    };
++                                };
++                            };
++                        };
++                    };
++                };
++
++                i2c@3180000 {
++                    status = "okay";
++                    rk628: bridge@50 {
++                        compatible = "rockchip,rk628";
++                        reg = <0x50>;
++                        status = "okay";
++
++                        reset-gpios = <&gpio HDMI_RESET GPIO_ACTIVE_HIGH>;
++
++                        /* Based on forum: Singular 'port' and explicit data-lanes */
++                        rk628_csi: csi {
++                            compatible = "rockchip,rk628-csi";
++                            status = "okay";
++                            
++                            tegra_sinterface = "serial_c"; 
++                            devnode = "video0";
++
++                            port {
++                                hdmiin_out1: endpoint {
++                                    remote-endpoint = <&rk628_nvcsi_in>;
++                                    data-lanes = <1 2 3 4>;
++                                    bus-width = <4>;
++                                };
++                            };
++
++                            /* Keep mode0 for NVIDIA PCL */
++                            mode0 {
++                                num_lanes = "4";
++                                tegra_sinterface = "serial_c";
++                                active_w = "1920";
++                                active_h = "1080";
++                                pixel_t = "yuv_uyvy16";
++                                line_length = "2200";
++                                pix_clk_hz = "148500000";
++                            };
++                        };
++                    };
++                };
++            };
++
++            tegra-camera-platform {
++                compatible = "nvidia,tegra-camera-platform";
++                modules {
++                    module0 {
++                        status = "okay";
++                        badge = "rk628_hdmi_csi";
++                        drivernode0 {
++                            status = "okay";
++                            pcl_id = "v4l2_sensor";
++                            devname = "rk628-csi 2-0050";
++                            sysfs-device-tree = "/sys/firmware/devicetree/base/bus@0/i2c@3180000/bridge@50/csi";
++                        };
++                    };
++                };
++            };
++        };
++    };
++};
+diff --git a/overlay/tegra234-camera-PAL-adv280-m.dts b/overlay/tegra234-camera-PAL-adv280-m.dts
+new file mode 100644
+index 0000000..08ca208
+--- /dev/null
++++ b/overlay/tegra234-camera-PAL-adv280-m.dts
+@@ -0,0 +1,165 @@
++/dts-v1/;
++/plugin/;
++
++#include <dt-bindings/tegra234-p3767-0000-common.h>
++
++/ {
++    overlay-name = "ADV7280-I2C-PAL";
++    //compatible = "nvidia,p3768-0000+p3767-0000";
++    jetson-header-name = "Jetson 24pin CSI Connector";
++    compatible = JETSON_COMPATIBLE_P3768;
++
++    fragment@0 {
++        target-path = "/";
++        __overlay__ {
++            tegra-capture-vi  {
++                status = "okay";
++                num-channels = <1>;
++                ports {
++                    #address-cells = <1>;
++                    #size-cells = <0>;
++                    port@0{
++                        status = "okay";
++                        reg = <0>;
++                        adv7280_vi_in0: endpoint {
++                            status = "okay";
++                            // ADV7280
++                            port-index = <0>;  // MIPI0 -> CSI-A
++                            bus-width = <1>;   // Use CSI-A only
++                            remote-endpoint = <&adv7280_csi_out0>;
++                        };
++                    };
++                };//end ports
++            };//end vi
++            
++            bus@0 {
++                host1x@13e00000 {
++                    nvcsi@15a00000 {
++                        num-channels = <1>;
++                        #address-cells = <1>;
++                        #size-cells = <0>;
++                        status = "okay";
++                        
++                        channel@0 {
++                            reg = <0>;
++                            status = "okay";
++                            discontinuous_clk = "no";
++                            ports {
++                                #address-cells = <1>;
++                                #size-cells = <0>;
++                                status = "okay";
++                                port@0 {
++                                    status = "okay";
++                                    reg = <0>;
++                                    adv7280_csi_in0: endpoint@0 {
++                                        status = "okay";
++                                        port-index = <0>;
++                                        bus-width = <1>;
++                                        remote-endpoint = <&adv7280_i2c_out0>;
++                                    };
++                                };
++                                port@1 {
++                                    status = "okay";
++                                    reg = <1>;
++                                    adv7280_csi_out0: endpoint@1 {
++                                        status = "okay";
++                                        remote-endpoint = <&adv7280_vi_in0>;
++                                    };
++                                };
++                            };
++                        }; // end channel
++                    }; // end nvcsi
++                }; // end host1x
++                
++                i2c@3180000 {
++                    status = "okay";
++
++                    /* Node name must be simple, compatible must be exact */
++                    adv7280@20 {
++                        compatible = "adi,adv7280-m"; 
++                        reg = <0x20>;
++                        status = "okay";
++                        //clock-frequency = <24000000>;
++                        /* NVIDIA PCL matching fields */
++                        devnode = "video0";
++                        
++                        physical_w = "4.713";
++                        physical_h = "3.494";
++
++                        //physical_w = "3.680";
++                        //physical_h = "2.760";
++                        
++                        sensor_model = "adv7280-m";
++
++                        use_sensor_mode_id = "false";
++                        
++                        //lane_polarity ="6";
++                        
++                        //active_w = "720";
++                        //active_h = "576";
++                        //pixel_t = "yuv_uyvy16";
++                        //num_lanes = "1";
++                        //discontinuous_clk = "no";
++                        //cil_settletime = "0";
++                        
++                        //default-standard = "PAL";
++                        //line_length = "1440"; // 720 pixels * 2 bytes/pixel (UYVY)
++
++                        ports {
++                            #address-cells = <1>;
++                            #size-cells = <0>;
++                            port@0 {
++                                reg = <0>;
++                                adv7280_i2c_out0: endpoint {
++                                    status = "okay";
++                                    port-index = <0>;
++                                    bus-width = <1>;
++                                    remote-endpoint = <&adv7280_csi_in0>;
++                                };
++                            };
++                        };
++                    }; // end adv7280@20
++                }; // end i2c@3180000
++            }; // end bus@0
++
++            tegra-camera-platform {
++                compatible = "nvidia, tegra-camera-platform";
++                num_csi_lanes = <1>;
++                max_lane_speed = <1500000>;
++                min_bits_per_pixel = <10>;
++                vi_peak_byte_per_pixel = <2>;
++                vi_bw_margin_pct = <25>;
++                max_pixel_rate = <240000>;
++                isp_peak_byte_per_pixel = <5>;
++                isp_bw_margin_pct = <25>;
++        
++                /*
++                * The general guideline for naming badge_info contains 3 parts, and is as follows,
++                * The first part is the camera_board_id for the module; if the module is in a FFD
++                * platform, then use the platform name for this part.
++                * The second part contains the position of the module, ex. rear or front.
++                * The third part contains the last 6 characters of a part number which is found
++                * in the module's specsheet from the vender.
++                */
++                modules {
++                    module0 {
++                        status = "okay";
++                        badge = "front_ADV7280";
++                        position = "front";
++                        orientation = "1";
++        
++                        drivernode0 {
++                            status = "okay";
++                            pcl_id = "v4l2_sensor";
++                            devname = "adv7280 2-0020";
++                            //proc-device-tree = "/proc/device-tree/i2c@7000c400/adv7280@21";
++                            sysfs-device-tree = "/sys/firmware/devicetree/base/bus@0/i2c@3180000/adv7280@20";
++        
++        
++                        };
++                    };
++                };
++            };
++        };
++    };
++};
+-- 
+2.34.1
+
