@@ -1,0 +1,297 @@
+From ddf46e7084e7fa32b34c71b1838715c9dd632ac3 Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Fri, 5 Jun 2026 11:34:22 +0300
+Subject: [PATCH] compulab: Update hdmi and pal to csi overlays
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ overlay/tegra234-camera-HDMI-rk628.dts   | 88 ++++++++++++++----------
+ overlay/tegra234-camera-PAL-adv280-m.dts | 47 +++----------
+ 2 files changed, 59 insertions(+), 76 deletions(-)
+
+diff --git a/overlay/tegra234-camera-HDMI-rk628.dts b/overlay/tegra234-camera-HDMI-rk628.dts
+index 24a83b1..53ae6b9 100644
+--- a/overlay/tegra234-camera-HDMI-rk628.dts
++++ b/overlay/tegra234-camera-HDMI-rk628.dts
+@@ -4,23 +4,27 @@
+ #include <dt-bindings/tegra234-p3767-0000-common.h>
+ 
+ #define HDMI_RESET  TEGRA234_MAIN_GPIO(AC, 6)
++#define RK628CSI_EN "okay"
+ 
+ / {
+     overlay-name = "RK628-HDMI-CSI-4Lane-Port2";
++    jetson-header-name = "Jetson 22pin CSI Connector";
+     compatible = JETSON_COMPATIBLE_P3768;
+ 
+     fragment@0 {
+         target-path = "/";
+         __overlay__ {
+             tegra-capture-vi {
+-                status = "okay";
+                 num-channels = <1>;
++                status = RK628CSI_EN;
+                 ports {
+                     #address-cells = <1>;
+                     #size-cells = <0>;
+                     port@0 {
++                        status = RK628CSI_EN;
+                         reg = <0>;
+                         rk628_vi_in0: endpoint {
++                            status = RK628CSI_EN;
+                             port-index = <2>;
+                             bus-width = <4>;
+                             remote-endpoint = <&rk628_nvcsi_out>;
+@@ -32,16 +36,22 @@
+             bus@0 {
+                 host1x@13e00000 {
+                     nvcsi@15a00000 {
+-                        status = "okay";
++                        num-channels = <1>;
++                        #address-cells = <1>;
++                        #size-cells = <0>;
++                        status = RK628CSI_EN;
+                         channel@0 {
++                            status = RK628CSI_EN;
+                             reg = <0>;
+-                            status = "okay";
++                            discontinuous_clk = "no";
+                             ports {
+                                 #address-cells = <1>;
+                                 #size-cells = <0>;
+                                 port@0 {
++                                    status = RK628CSI_EN;
+                                     reg = <0>;
+                                     rk628_nvcsi_in: endpoint {
++                                        status = RK628CSI_EN;
+                                         port-index = <2>;
+                                         bus-width = <4>;
+                                         /* This must match the endpoint label in rk628_csi */
+@@ -49,6 +59,7 @@
+                                     };
+                                 };
+                                 port@1 {
++                                    status = RK628CSI_EN;
+                                     reg = <1>;
+                                     rk628_nvcsi_out: endpoint {
+                                         remote-endpoint = <&rk628_vi_in0>;
+@@ -60,56 +71,57 @@
+                 };
+ 
+                 i2c@3180000 {
+-                    status = "okay";
+-                    rk628: bridge@50 {
+-                        compatible = "rockchip,rk628";
++                    #address-cells = <1>;
++                    #size-cells = <0>;
++                    status = RK628CSI_EN;
++                    rk628_csi: rk628_csi@50{
+                         reg = <0x50>;
+-                        status = "okay";
+-
++                        compatible = "rockchip,rk628-csi-v4l2";
++                        status = RK628CSI_EN;
++                        continues-clk = <1>;
+                         reset-gpios = <&gpio HDMI_RESET GPIO_ACTIVE_HIGH>;
++                        rk628-hdmi-in;
++                        rk628-csi-out;
++                        rockchip,camera-module-index = <0>;
++                        rockchip,camera-module-facing = "back";
++                        rockchip,camera-module-name = "HDMI-MIPI2";
++                        rockchip,camera-module-lens-name = "RK628-CSI";
+ 
+-                        /* Based on forum: Singular 'port' and explicit data-lanes */
+-                        rk628_csi: csi {
+-                            compatible = "rockchip,rk628-csi";
+-                            status = "okay";
+-                            
+-                            tegra_sinterface = "serial_c"; 
+-                            devnode = "video0";
+-
+-                            port {
+-                                hdmiin_out1: endpoint {
+-                                    remote-endpoint = <&rk628_nvcsi_in>;
+-                                    data-lanes = <1 2 3 4>;
+-                                    bus-width = <4>;
+-                                };
+-                            };
+-
+-                            /* Keep mode0 for NVIDIA PCL */
+-                            mode0 {
+-                                num_lanes = "4";
+-                                tegra_sinterface = "serial_c";
+-                                active_w = "1920";
+-                                active_h = "1080";
+-                                pixel_t = "yuv_uyvy16";
+-                                line_length = "2200";
+-                                pix_clk_hz = "148500000";
+-                            };
++                        port {
++                            hdmiin_out1: endpoint {
++                                status = RK628CSI_EN;
++                                remote-endpoint = <&rk628_nvcsi_in>;
++                                data-lanes = <1 2 3 4>;
++                                bus-type = <4>;
++                           };
+                         };
+                     };
+                 };
+             };
+ 
+             tegra-camera-platform {
+-                compatible = "nvidia,tegra-camera-platform";
++                compatible = "nvidia, tegra-camera-platform";
++                num_csi_lanes = <4>;
++                max_lane_speed = <2500000>;
++                min_bits_per_pixel = <16>;
++                vi_peak_byte_per_pixel = <3>;
++                vi_bw_margin_pct = <25>;
++                isp_peak_byte_per_pixel = <3>;
++                isp_bw_margin_pct = <25>;
++                status = RK628CSI_EN;
++
+                 modules {
+                     module0 {
+-                        status = "okay";
++                        status = RK628CSI_EN;
+                         badge = "rk628_hdmi_csi";
+                         drivernode0 {
+-                            status = "okay";
++                            /* Declare PCL support driver (classically known as guid)  */
+                             pcl_id = "v4l2_sensor";
++                            /* Driver v4l2 device name */
+                             devname = "rk628-csi 2-0050";
+-                            sysfs-device-tree = "/sys/firmware/devicetree/base/bus@0/i2c@3180000/bridge@50/csi";
++                            /* Declare the device-tree hierarchy to driver instance */
++                            proc-device-tree = "/proc/device-tree/bus@0/i2c@3180000/rk628_csi@50";
++                            sysfs-device-tree = "/sys/firmware/devicetree/base/bus@0/i2c@3180000/rk628_csi@50";
+                         };
+                     };
+                 };
+diff --git a/overlay/tegra234-camera-PAL-adv280-m.dts b/overlay/tegra234-camera-PAL-adv280-m.dts
+index 08ca208..b4e031c 100644
+--- a/overlay/tegra234-camera-PAL-adv280-m.dts
++++ b/overlay/tegra234-camera-PAL-adv280-m.dts
+@@ -5,8 +5,7 @@
+ 
+ / {
+     overlay-name = "ADV7280-I2C-PAL";
+-    //compatible = "nvidia,p3768-0000+p3767-0000";
+-    jetson-header-name = "Jetson 24pin CSI Connector";
++    jetson-header-name = "Jetson 22pin CSI Connector";
+     compatible = JETSON_COMPATIBLE_P3768;
+ 
+     fragment@0 {
+@@ -23,14 +22,13 @@
+                         reg = <0>;
+                         adv7280_vi_in0: endpoint {
+                             status = "okay";
+-                            // ADV7280
+                             port-index = <0>;  // MIPI0 -> CSI-A
+                             bus-width = <1>;   // Use CSI-A only
+                             remote-endpoint = <&adv7280_csi_out0>;
+                         };
+                     };
+-                };//end ports
+-            };//end vi
++                };
++            };
+             
+             bus@0 {
+                 host1x@13e00000 {
+@@ -39,7 +37,6 @@
+                         #address-cells = <1>;
+                         #size-cells = <0>;
+                         status = "okay";
+-                        
+                         channel@0 {
+                             reg = <0>;
+                             status = "okay";
+@@ -67,44 +64,23 @@
+                                     };
+                                 };
+                             };
+-                        }; // end channel
+-                    }; // end nvcsi
+-                }; // end host1x
++                        };
++                    };
++                };
+                 
+                 i2c@3180000 {
+                     status = "okay";
+-
+                     /* Node name must be simple, compatible must be exact */
+                     adv7280@20 {
+                         compatible = "adi,adv7280-m"; 
+                         reg = <0x20>;
+                         status = "okay";
+-                        //clock-frequency = <24000000>;
+                         /* NVIDIA PCL matching fields */
+                         devnode = "video0";
+-                        
+                         physical_w = "4.713";
+                         physical_h = "3.494";
+-
+-                        //physical_w = "3.680";
+-                        //physical_h = "2.760";
+-                        
+                         sensor_model = "adv7280-m";
+-
+                         use_sensor_mode_id = "false";
+-                        
+-                        //lane_polarity ="6";
+-                        
+-                        //active_w = "720";
+-                        //active_h = "576";
+-                        //pixel_t = "yuv_uyvy16";
+-                        //num_lanes = "1";
+-                        //discontinuous_clk = "no";
+-                        //cil_settletime = "0";
+-                        
+-                        //default-standard = "PAL";
+-                        //line_length = "1440"; // 720 pixels * 2 bytes/pixel (UYVY)
+-
+                         ports {
+                             #address-cells = <1>;
+                             #size-cells = <0>;
+@@ -118,9 +94,9 @@
+                                 };
+                             };
+                         };
+-                    }; // end adv7280@20
+-                }; // end i2c@3180000
+-            }; // end bus@0
++                    };
++                };
++            };
+ 
+             tegra-camera-platform {
+                 compatible = "nvidia, tegra-camera-platform";
+@@ -132,7 +108,6 @@
+                 max_pixel_rate = <240000>;
+                 isp_peak_byte_per_pixel = <5>;
+                 isp_bw_margin_pct = <25>;
+-        
+                 /*
+                 * The general guideline for naming badge_info contains 3 parts, and is as follows,
+                 * The first part is the camera_board_id for the module; if the module is in a FFD
+@@ -147,15 +122,11 @@
+                         badge = "front_ADV7280";
+                         position = "front";
+                         orientation = "1";
+-        
+                         drivernode0 {
+                             status = "okay";
+                             pcl_id = "v4l2_sensor";
+                             devname = "adv7280 2-0020";
+-                            //proc-device-tree = "/proc/device-tree/i2c@7000c400/adv7280@21";
+                             sysfs-device-tree = "/sys/firmware/devicetree/base/bus@0/i2c@3180000/adv7280@20";
+-        
+-        
+                         };
+                     };
+                 };
+-- 
+2.34.1
+
