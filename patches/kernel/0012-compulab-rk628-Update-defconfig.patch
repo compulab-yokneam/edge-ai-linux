@@ -1,0 +1,43 @@
+From b3e94c01d6475d31d1dd1ca31f6d11405d628419 Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Mon, 25 May 2026 18:47:10 +0300
+Subject: [PATCH] compulab: rk628: Update defconfig
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ arch/arm64/configs/defconfig | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 43201844c285..0ec54f2e3f10 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -316,6 +316,9 @@ CONFIG_BLK_DEV_NVME=m
+ CONFIG_NVME_TCP=m
+ CONFIG_NVME_TARGET=m
+ CONFIG_NVME_TARGET_TCP=m
++CONFIG_RK628_MISC=m
++CONFIG_RK628_MISC_HDMITX=y
++CONFIG_ROCKCHIP_THUNDER_BOOT_RK628=y
+ CONFIG_SRAM=y
+ CONFIG_PCI_ENDPOINT_TEST=m
+ CONFIG_EEPROM_AT24=m
+@@ -693,6 +696,7 @@ CONFIG_MFD_SEC_CORE=y
+ CONFIG_MFD_SL28CPLD=y
+ CONFIG_MFD_ROHM_BD718XX=y
+ CONFIG_MFD_WCD934X=m
++CONFIG_VIDEO_RK628=m
+ CONFIG_REGULATOR_FIXED_VOLTAGE=y
+ CONFIG_REGULATOR_AXP20X=y
+ CONFIG_REGULATOR_BD718XX=y
+@@ -748,6 +752,7 @@ CONFIG_VIDEO_QCOM_VENUS=m
+ CONFIG_SDR_PLATFORM_DRIVERS=y
+ CONFIG_VIDEO_RCAR_DRIF=m
+ CONFIG_VIDEO_ADV7180=m
++CONFIG_VIDEO_RK628_CSI=m
+ CONFIG_VIDEO_OV5645=m
+ # CONFIG_CXD2880_SPI_DRV is not set
+ CONFIG_DRM=m
+-- 
+2.34.1
+
