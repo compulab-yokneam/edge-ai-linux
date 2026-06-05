@@ -1,10 +1,11 @@
 #!/bin/bash
-set -e
+set -euo pipefail
 
 EDGE_AI_SDK="edgeai-compulab-bsp"
-REPO_URL="https://github.com/compulab-yokneam/edge-ai-linux"
-SNAPSHOT_URL="$REPO_URL/archive/refs/heads/devel.tar.gz"
+SRCREV="devel"
+SRC_URI="https://github.com/compulab-yokneam/edge-ai-linux/archive/refs/heads/${SRCREV}.tar.gz"
+
 mkdir ${EDGE_AI_SDK}
-curl -fsSL "$SNAPSHOT_URL" | tar -C ${EDGE_AI_SDK} --strip-components=1 -xz
-cd "${EDGE_AI_SDK}/scripts"
+curl -fsSL ${SRC_URI} | tar -C ${EDGE_AI_SDK} --strip-components=1 -xz
+cd ${EDGE_AI_SDK}/scripts
 exec bash ./build.sh all
