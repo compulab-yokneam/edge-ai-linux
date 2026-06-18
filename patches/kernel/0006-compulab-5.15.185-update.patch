@@ -1,0 +1,367 @@
+From 9855a20c1c3c626f4d30e6d2afa1ee24ef655744 Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Thu, 18 Jun 2026 12:38:37 +0300
+Subject: [PATCH] compulab: 5.15.185 update
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ drivers/media/i2c/rk628/rk628_csi_v4l2.c | 219 ++++++++++++++++++-----
+ 1 file changed, 172 insertions(+), 47 deletions(-)
+
+diff --git a/drivers/media/i2c/rk628/rk628_csi_v4l2.c b/drivers/media/i2c/rk628/rk628_csi_v4l2.c
+index ad513dcda4e7..b87272f025b1 100644
+--- a/drivers/media/i2c/rk628/rk628_csi_v4l2.c
++++ b/drivers/media/i2c/rk628/rk628_csi_v4l2.c
+@@ -169,7 +169,7 @@ static const struct v4l2_dv_timings_cap rk628_csi_timings_cap = {
+ static u8 edid_init_data[] = {
+ 	0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0x00,
+ 	0x49, 0x73, 0x8D, 0x62, 0x00, 0x88, 0x88, 0x88,
+-	0x08, 0x1E, 0x01, 0x03, 0x80, 0x00, 0x00, 0x78,
++	0x08, 0x1E, 0x01, 0x04, 0x80, 0x00, 0x00, 0x78,
+ 	0x0A, 0x0D, 0xC9, 0xA0, 0x57, 0x47, 0x98, 0x27,
+ 	0x12, 0x48, 0x4C, 0x00, 0x00, 0x00, 0x01, 0x01,
+ 	0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
+@@ -181,25 +181,25 @@ static u8 edid_init_data[] = {
+ 	0x00, 0x1E, 0x00, 0x00, 0x00, 0xFC, 0x00, 0x54,
+ 	0x37, 0x34, 0x39, 0x2D, 0x66, 0x48, 0x44, 0x37,
+ 	0x32, 0x30, 0x0A, 0x20, 0x00, 0x00, 0x00, 0xFD,
+-	0x00, 0x14, 0x78, 0x01, 0xFF, 0x1D, 0x00, 0x0A,
+-	0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x01, 0x18,
+-
+-	0x02, 0x03, 0x1A, 0x71, 0x47, 0x5F, 0x90, 0x22,
+-	0x04, 0x11, 0x02, 0x01, 0x23, 0x09, 0x07, 0x01,
+-	0x83, 0x01, 0x00, 0x00, 0x65, 0x03, 0x0C, 0x00,
+-	0x10, 0x00, 0x02, 0x3A, 0x80, 0x18, 0x71, 0x38,
+-	0x2D, 0x40, 0x58, 0x2C, 0x45, 0x00, 0x20, 0xC2,
+-	0x31, 0x00, 0x00, 0x1E, 0x01, 0x1D, 0x00, 0x72,
+-	0x51, 0xD0, 0x1E, 0x20, 0x6E, 0x28, 0x55, 0x00,
+-	0x20, 0xC2, 0x31, 0x00, 0x00, 0x1E, 0x02, 0x3A,
+-	0x80, 0xD0, 0x72, 0x38, 0x2D, 0x40, 0x10, 0x2C,
+-	0x45, 0x80, 0x20, 0xC2, 0x31, 0x00, 0x00, 0x1E,
+-	0x01, 0x1D, 0x80, 0x18, 0x71, 0x38, 0x2D, 0x40,
+-	0x58, 0x2C, 0x45, 0x00, 0xC0, 0x6C, 0x00, 0x00,
+-	0x00, 0x18, 0x01, 0x1D, 0x80, 0x18, 0x71, 0x1C,
+-	0x16, 0x20, 0x58, 0x2C, 0x25, 0x00, 0xC0, 0x6C,
+-	0x00, 0x00, 0x00, 0x18, 0x00, 0x00, 0x00, 0x00,
+-	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xC1,
++	0x00, 0x14, 0x78, 0x01, 0xFF, 0x1E, 0x00, 0x0A,
++	0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x01, 0x16,
++
++	0x02, 0x03, 0x21, 0x71, 0x4B, 0x90, 0x1F, 0x22,
++	0x21, 0x04, 0x13, 0x03, 0x02, 0x12, 0x11, 0x01,
++	0x23, 0x09, 0x07, 0x01, 0x83, 0x01, 0x00, 0x00,
++	0x65, 0x03, 0x0C, 0x00, 0x10, 0x00, 0xE2, 0x00,
++	0xCB, 0x2B, 0x2F, 0x00, 0xA0, 0xA0, 0xA0, 0x29,
++	0x50, 0x30, 0x20, 0x35, 0x00, 0xC4, 0x8E, 0x21,
++	0x00, 0x00, 0x1A, 0x5B, 0x27, 0x00, 0xA0, 0xA0,
++	0xA0, 0x29, 0x50, 0x30, 0x20, 0x35, 0x00, 0xC4,
++	0x8E, 0x21, 0x00, 0x00, 0x1A, 0x00, 0x00, 0x00,
++	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
++	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x51,
+ };
+ 
+ static u8 rk628f_edid_init_data[] = {
+@@ -220,22 +220,22 @@ static u8 rk628f_edid_init_data[] = {
+ 	0x00, 0x3B, 0x46, 0x1F, 0x8C, 0x3C, 0x00, 0x0A,
+ 	0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x01, 0xA8,
+ 
+-	0x02, 0x03, 0x39, 0xF2, 0x4D, 0x01, 0x03, 0x12,
++	0x02, 0x03, 0x3C, 0xF2, 0x4D, 0x01, 0x03, 0x12,
+ 	0x13, 0x84, 0x22, 0x1F, 0x90, 0x5D, 0x5E, 0x5F,
+ 	0x60, 0x61, 0x23, 0x09, 0x07, 0x07, 0x83, 0x01,
+ 	0x00, 0x00, 0x6D, 0x03, 0x0C, 0x00, 0x10, 0x00,
+ 	0x00, 0x44, 0x20, 0x00, 0x60, 0x03, 0x02, 0x01,
+ 	0x67, 0xD8, 0x5D, 0xC4, 0x01, 0x78, 0x80, 0x00,
+ 	0xE3, 0x05, 0x03, 0x01, 0xE4, 0x0F, 0x00, 0x18,
+-	0x00, 0x02, 0x3A, 0x80, 0x18, 0x71, 0x38, 0x2D,
+-	0x40, 0x58, 0x2C, 0x45, 0x00, 0xB9, 0xA8, 0x42,
+-	0x00, 0x00, 0x1E, 0x08, 0xE8, 0x00, 0x30, 0xF2,
+-	0x70, 0x5A, 0x80, 0xB0, 0x58, 0x8A, 0x00, 0xC4,
+-	0x8E, 0x21, 0x00, 0x00, 0x1E, 0x00, 0x00, 0x00,
++	0x00, 0xE2, 0x00, 0xCB, 0x02, 0x3A, 0x80, 0x18,
++	0x71, 0x38, 0x2D, 0x40, 0x58, 0x2C, 0x45, 0x00,
++	0xB9, 0xA8, 0x42, 0x00, 0x00, 0x1E, 0x08, 0xE8,
++	0x00, 0x30, 0xF2, 0x70, 0x5A, 0x80, 0xB0, 0x58,
++	0x8A, 0x00, 0xC4, 0x8E, 0x21, 0x00, 0x00, 0x1E,
+ 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+ 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+ 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+-	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xD3,
++	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x23,
+ };
+ 
+ static struct rk628_edid edid_data[] = {
+@@ -296,6 +296,42 @@ static const struct rk628_csi_mode supported_modes[] = {
+ 		},
+ 		.hts_def = 4400,
+ 		.vts_def = 2250,
++	}, {
++		.width = 2560,
++		.height = 1440,
++		.max_fps = {
++			.numerator = 10000,
++			.denominator = 600000,
++		},
++		.hts_def = 2720,
++		.vts_def = 1481,
++	}, {
++		.width = 2560,
++		.height = 1440,
++		.max_fps = {
++			.numerator = 10000,
++			.denominator = 500000,
++		},
++		.hts_def = 2720,
++		.vts_def = 1481,
++	}, {
++		.width = 2560,
++		.height = 1440,
++		.max_fps = {
++			.numerator = 10000,
++			.denominator = 300000,
++		},
++		.hts_def = 2720,
++		.vts_def = 1481,
++	}, {
++		.width = 2560,
++		.height = 1440,
++		.max_fps = {
++			.numerator = 10000,
++			.denominator = 250000,
++		},
++		.hts_def = 2720,
++		.vts_def = 1481,
+ 	}, {
+ 		.width = 1920,
+ 		.height = 1080,
+@@ -587,6 +623,33 @@ static int rk628_check_resulotion_change(struct v4l2_subdev *sd)
+ 	return 0;
+ }
+ 
++static bool rk628_csi_signal_timing_unchanged(struct v4l2_subdev *sd,
++					      u32 hact, u32 vact)
++{
++	struct rk628_csi *csi = to_csi(sd);
++	struct v4l2_bt_timings *bt = &csi->src_timings.bt;
++	u32 val, htotal, vtotal;
++	u32 old_htotal, old_vtotal;
++
++	if (csi->nosignal || csi->src_timings.type != V4L2_DV_BT_656_1120)
++		return false;
++
++	hact &= 0xffff;
++	vact &= 0xffff;
++	if (!hact || !vact || hact != bt->width || vact != bt->height)
++		return false;
++
++	rk628_i2c_read(csi->rk628, HDMI_RX_MD_HT1, &val);
++	htotal = (val >> 16) & 0xffff;
++	rk628_i2c_read(csi->rk628, HDMI_RX_MD_VTL, &val);
++	vtotal = val & 0xffff;
++
++	old_htotal = bt->hfrontporch + bt->hsync + bt->width + bt->hbackporch;
++	old_vtotal = bt->vfrontporch + bt->vsync + bt->height + bt->vbackporch;
++
++	return htotal == old_htotal && vtotal == old_vtotal;
++}
++
+ static void rk628_delayed_work_res_change(struct work_struct *work)
+ {
+ 	struct delayed_work *dwork = to_delayed_work(work);
+@@ -1485,6 +1548,7 @@ static int rk628_csi_format_change(struct v4l2_subdev *sd)
+ 		.u.src_change.changes = V4L2_EVENT_SRC_CH_RESOLUTION,
+ 	};
+ 	int ret;
++	bool changed = false;
+ 
+ 	ret = rk628_csi_get_detected_timings(sd, &timings);
+ 	if (ret) {
+@@ -1497,9 +1561,10 @@ static int rk628_csi_format_change(struct v4l2_subdev *sd)
+ 		v4l2_print_dv_timings(sd->name,
+ 				"rk628_csi_format_change: New format: ",
+ 				&timings, false);
++		changed = true;
+ 	}
+ 
+-	if (sd->devnode)
++	if (changed && sd->devnode)
+ 		v4l2_subdev_notify_event(sd, &rk628_csi_ev_fmt);
+ 
+ 	return LOCK_OK;
+@@ -1794,6 +1859,15 @@ static int rk628_hdmirx_general_isr(struct v4l2_subdev *sd, u32 status, bool *ha
+ 		v4l2_dbg(1, debug, sd, "%s: HACT:%#x, VACT:%#x\n",
+ 			 __func__, hact, vact);
+ 
++		if (!(pdec_ints & AVI_CKS_CHG_ISTS) &&
++		    rk628_csi_signal_timing_unchanged(sd, hact, vact)) {
++			v4l2_dbg(1, debug, sd,
++				 "%s: ignore unchanged HDMI timing interrupt\n",
++				 __func__);
++			*handled = true;
++			return 0;
++		}
++
+ 		rk628_csi_enable_interrupts(sd, false);
+ 		if (csi->rk628->version < RK628F_VERSION)
+ 			enable_stream(sd, false);
+@@ -2112,19 +2186,37 @@ static int rk628_csi_enum_frame_sizes(struct v4l2_subdev *sd,
+ 				   struct v4l2_subdev_frame_size_enum *fse)
+ {
+ 	struct rk628_csi *csi = to_csi(sd);
++	bool uyvy_1x16_alias = fse->code == MEDIA_BUS_FMT_UYVY8_1X16 &&
++			       csi->plat_data->bus_fmt == MEDIA_BUS_FMT_UYVY8_2X8;
++	unsigned int i, j, index = 0;
++	bool duplicate;
+ 
+-	if (fse->index >= ARRAY_SIZE(supported_modes))
++	if (fse->code != csi->plat_data->bus_fmt && !uyvy_1x16_alias)
+ 		return -EINVAL;
+ 
+-	if (fse->code != csi->plat_data->bus_fmt)
+-		return -EINVAL;
++	for (i = 0; i < ARRAY_SIZE(supported_modes); i++) {
++		duplicate = false;
++		for (j = 0; j < i; j++) {
++			if (supported_modes[j].width == supported_modes[i].width &&
++			    supported_modes[j].height == supported_modes[i].height) {
++				duplicate = true;
++				break;
++			}
++		}
++		if (duplicate)
++			continue;
+ 
+-	fse->min_width  = supported_modes[fse->index].width;
+-	fse->max_width  = supported_modes[fse->index].width;
+-	fse->max_height = supported_modes[fse->index].height;
+-	fse->min_height = supported_modes[fse->index].height;
++		if (index++ != fse->index)
++			continue;
+ 
+-	return 0;
++		fse->min_width  = supported_modes[i].width;
++		fse->max_width  = supported_modes[i].width;
++		fse->max_height = supported_modes[i].height;
++		fse->min_height = supported_modes[i].height;
++		return 0;
++	}
++
++	return -EINVAL;
+ }
+ 
+ static int rk628_csi_enum_frame_interval(struct v4l2_subdev *sd,
+@@ -2132,16 +2224,27 @@ static int rk628_csi_enum_frame_interval(struct v4l2_subdev *sd,
+ 		struct v4l2_subdev_frame_interval_enum *fie)
+ {
+ 	struct rk628_csi *csi = to_csi(sd);
++	bool uyvy_1x16_alias = fie->code == MEDIA_BUS_FMT_UYVY8_1X16 &&
++			       csi->plat_data->bus_fmt == MEDIA_BUS_FMT_UYVY8_2X8;
++	unsigned int i, index = 0;
+ 
+-	if (fie->index >= ARRAY_SIZE(supported_modes))
++	if (fie->code != csi->plat_data->bus_fmt && !uyvy_1x16_alias)
+ 		return -EINVAL;
+ 
+-	fie->code = csi->plat_data->bus_fmt;
++	for (i = 0; i < ARRAY_SIZE(supported_modes); i++) {
++		if (fie->width != supported_modes[i].width ||
++		    fie->height != supported_modes[i].height)
++			continue;
+ 
+-	fie->width = supported_modes[fie->index].width;
+-	fie->height = supported_modes[fie->index].height;
+-	fie->interval = supported_modes[fie->index].max_fps;
+-	return 0;
++		if (index++ != fie->index)
++			continue;
++
++		fie->code = csi->plat_data->bus_fmt;
++		fie->interval = supported_modes[i].max_fps;
++		return 0;
++	}
++
++	return -EINVAL;
+ }
+ 
+ static int rk628_csi_get_fmt(struct v4l2_subdev *sd,
+@@ -2216,23 +2319,39 @@ static int rk628_csi_get_fmt(struct v4l2_subdev *sd,
+ }
+ 
+ static int rk628_csi_get_reso_dist(const struct rk628_csi_mode *mode,
+-		struct v4l2_mbus_framefmt *framefmt)
++			struct v4l2_mbus_framefmt *framefmt)
+ {
+ 	return abs(mode->width - framefmt->width) +
+ 	       abs(mode->height - framefmt->height);
+ }
+ 
++static unsigned int rk628_csi_mode_fps(const struct rk628_csi_mode *mode)
++{
++	if (!mode->max_fps.numerator)
++		return 0;
++
++	return DIV_ROUND_CLOSEST(mode->max_fps.denominator,
++				 mode->max_fps.numerator);
++}
++
+ static const struct rk628_csi_mode *
+-rk628_csi_find_best_fit(struct v4l2_subdev_format *fmt)
++rk628_csi_find_best_fit(struct rk628_csi *csi, struct v4l2_subdev_format *fmt)
+ {
+ 	struct v4l2_mbus_framefmt *framefmt = &fmt->format;
+-	int dist;
++	unsigned int detected_fps = fps_calc(&csi->timings.bt);
++	int dist, res_dist, fps_dist;
+ 	int cur_best_fit = 0;
+ 	int cur_best_fit_dist = -1;
+ 	unsigned int i;
+ 
+ 	for (i = 0; i < ARRAY_SIZE(supported_modes); i++) {
+-		dist = rk628_csi_get_reso_dist(&supported_modes[i], framefmt);
++		res_dist = rk628_csi_get_reso_dist(&supported_modes[i], framefmt);
++		dist = res_dist * 1000;
++		if (!res_dist && detected_fps) {
++			fps_dist = abs((int)detected_fps -
++				       (int)rk628_csi_mode_fps(&supported_modes[i]));
++			dist += fps_dist;
++		}
+ 		if (cur_best_fit_dist == -1 || dist < cur_best_fit_dist) {
+ 			cur_best_fit_dist = dist;
+ 			cur_best_fit = i;
+@@ -2262,6 +2381,10 @@ static int rk628_csi_set_fmt(struct v4l2_subdev *sd,
+ 		if (csi->plat_data->bus_fmt == MEDIA_BUS_FMT_UYVY8_2X8)
+ 			break;
+ 		return -EINVAL;
++	case MEDIA_BUS_FMT_UYVY8_1X16:
++		if (csi->plat_data->bus_fmt == MEDIA_BUS_FMT_UYVY8_2X8)
++			break;
++		return -EINVAL;
+ 	case MEDIA_BUS_FMT_RGB888_1X24:
+ 		if (csi->plat_data->bus_fmt == MEDIA_BUS_FMT_RGB888_1X24)
+ 			break;
+@@ -2270,6 +2393,8 @@ static int rk628_csi_set_fmt(struct v4l2_subdev *sd,
+ 		return -EINVAL;
+ 	}
+ 
++	format->format.code = csi->plat_data->bus_fmt;
++
+ 	if (format->which == V4L2_SUBDEV_FORMAT_TRY) {
+ 		if (csi->plat_data->bus_fmt == MEDIA_BUS_FMT_UYVY8_2X8)
+ 			return 0;
+@@ -2278,7 +2403,7 @@ static int rk628_csi_set_fmt(struct v4l2_subdev *sd,
+ 	}
+ 
+ 	csi->mbus_fmt_code = format->format.code;
+-	mode = rk628_csi_find_best_fit(format);
++	mode = rk628_csi_find_best_fit(csi, format);
+ 	csi->cur_mode = mode;
+ 
+ 	enable_stream(sd, false);
+-- 
+2.34.1
+
