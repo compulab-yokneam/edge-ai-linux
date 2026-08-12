@@ -1,0 +1,35 @@
+From 61fe7842fb817f61f9afdf1ade4dab5344e24dc4 Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Tue, 1 Sep 2026 14:39:22 +0300
+Subject: [PATCH] Update configs
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ arch/arm64/configs/compulab.config | 1 +
+ arch/arm64/configs/defconfig       | 1 +
+ 2 files changed, 2 insertions(+)
+
+diff --git a/arch/arm64/configs/compulab.config b/arch/arm64/configs/compulab.config
+index 47f6ea83cc76..88f974443de1 100644
+--- a/arch/arm64/configs/compulab.config
++++ b/arch/arm64/configs/compulab.config
+@@ -15,3 +15,4 @@ CONFIG_VIDEO_RK628=m
+ CONFIG_MEDIA_SUBDRV_AUTOSELECT=n
+ CONFIG_VIDEO_ADV7180=m
+ CONFIG_CXD2880_SPI_DRV=n
++CONFIG_SERIAL_TEGRA_RS485=m
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 4d799551e4a2..d32cb3a30ea2 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -485,6 +485,7 @@ CONFIG_SERIAL_MESON_CONSOLE=y
+ CONFIG_SERIAL_SAMSUNG=y
+ CONFIG_SERIAL_SAMSUNG_CONSOLE=y
+ CONFIG_SERIAL_TEGRA=y
++CONFIG_SERIAL_TEGRA_RS485=m
+ CONFIG_SERIAL_TEGRA_TCU=y
+ CONFIG_SERIAL_IMX=y
+ CONFIG_SERIAL_IMX_CONSOLE=y
+-- 
+2.34.1
+
