@@ -1,28 +1,29 @@
-From 40f154e749ef78d8cbb225ca6724ec05d4603c8d Mon Sep 17 00:00:00 2001
+From 3fe2fbdfd459e2e94c67f86eb7a9f3e84dbccd36 Mon Sep 17 00:00:00 2001
 From: Valentin Raevsky <valentin@compulab.co.il>
 Date: Sat, 18 Jul 2026 16:10:11 +0300
-Subject: [PATCH] Add gpio-wdt-ext
+Subject: [PATCH] compulab: Add gpio-wdt-ext
 
 Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
 ---
- nv-platform/compulab/gpio-wdt.dtsi                    | 11 +++++++++++
- .../tegra234-p3768-0000+p3767-xxxx-nv-common.dtsi     |  1 +
- 2 files changed, 12 insertions(+)
+ nv-platform/compulab/gpio-wdt.dtsi                   | 12 ++++++++++++
+ .../tegra234-p3768-0000+p3767-xxxx-nv-common.dtsi    |  1 +
+ 2 files changed, 13 insertions(+)
  create mode 100644 nv-platform/compulab/gpio-wdt.dtsi
 
 diff --git a/nv-platform/compulab/gpio-wdt.dtsi b/nv-platform/compulab/gpio-wdt.dtsi
 new file mode 100644
-index 0000000..ea11635
+index 0000000..ba11ca7
 --- /dev/null
 +++ b/nv-platform/compulab/gpio-wdt.dtsi
-@@ -0,0 +1,11 @@
+@@ -0,0 +1,12 @@
 +#warning "It is a draft: the ping/enable-gpios must be changed"
 +&{/} {
++    model = "MY CUSTOM WDT DTB";
 +    watchdog {
 +        compatible = "linux,wdt-gpio-ext";
-+        ping-gpios = <&gpio TEGRA234_MAIN_GPIO(M, 0) GPIO_ACTIVE_LOW>;
-+        enable-gpios = <&gpio TEGRA234_MAIN_GPIO(M, 1) GPIO_ACTIVE_LOW>;
-+        hw_algo = "level";
++        ping-gpios = <&gpio TEGRA234_MAIN_GPIO(A, 7) GPIO_ACTIVE_HIGH>;
++        enable-gpios = <&gpio TEGRA234_MAIN_GPIO(A, 6) GPIO_ACTIVE_HIGH>;
++        hw_algo = "toggle";
 +        hw_margin_ms = <1600>;
 +        status = "okay";
 +    };

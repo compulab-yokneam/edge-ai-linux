@@ -1,0 +1,40 @@
+From f264c26b005701796ec6eeebf03641d7ede0a8fe Mon Sep 17 00:00:00 2001
+From: Valentin Raevsky <valentin@compulab.co.il>
+Date: Wed, 12 Aug 2026 16:58:32 +0300
+Subject: [PATCH] compulab: Add hsuart-rs485.dtsi
+
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+---
+ nv-soc/compulab/hsuart-rs485.dtsi | 9 +++++++++
+ nv-soc/tegra234-soc-overlay.dtsi  | 2 ++
+ 2 files changed, 11 insertions(+)
+ create mode 100644 nv-soc/compulab/hsuart-rs485.dtsi
+
+diff --git a/nv-soc/compulab/hsuart-rs485.dtsi b/nv-soc/compulab/hsuart-rs485.dtsi
+new file mode 100644
+index 0000000..afc8806
+--- /dev/null
++++ b/nv-soc/compulab/hsuart-rs485.dtsi
+@@ -0,0 +1,9 @@
++&{/aliases} {
++	serial3 = "/bus@0/serial@3110000";
++};
++
++&{/bus@0/serial@3110000} {
++	compatible = "nvidia,tegra194-hsuart-rs485", "nvidia,tegra194-hsuart";
++	reset-names = "serial";
++	status = "okay";
++};
+diff --git a/nv-soc/tegra234-soc-overlay.dtsi b/nv-soc/tegra234-soc-overlay.dtsi
+index 41a6379..8553f16 100644
+--- a/nv-soc/tegra234-soc-overlay.dtsi
++++ b/nv-soc/tegra234-soc-overlay.dtsi
+@@ -1089,3 +1089,5 @@
+ 		};
+ 	};
+ };
++
++#include "compulab/hsuart-rs485.dtsi"
+-- 
+2.34.1
+
